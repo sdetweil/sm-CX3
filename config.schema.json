@@ -1,0 +1,94 @@
+{
+  "schema": {
+    "CX3": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "title": "mode",
+          "enum": [
+            "week",
+            "month"
+          ]
+        },
+        "firstDayOfWeek": {
+          "type": "number",
+          "title": "First Day of week",
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "weeks_to_view": {
+          "type": "string",
+          "title": "weeks in view",
+          "default": "2",
+          "enum": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        },
+        "week_offset": {
+          "type": "string",
+          "title": "week offset",
+          "enum": [
+            "-1",
+            "0",
+            "1"
+          ]
+        },
+        "display_weather": {
+          "title": "{{display_weather}}",
+          "type": "boolean",
+          "default": true
+        },
+        "display_week_number": {
+          "title": "{{display_week}}",
+          "type": "boolean",
+          "default": false
+        },
+        "fontsize": {
+          "type": "number",
+          "title": "{{fontsize}}",
+          "default": 14
+        },
+        "maxeventsize": {
+          "type": "number",
+          "title": "{{maxevents}}",
+          "default": 6
+        }
+      }
+    }
+  },
+  "form": [
+    {
+      "title": "{{title}}",
+      "type": "fieldset",
+      "expandable": true,
+      "order": 99,
+      "items": [
+        "CX3.mode",
+        {
+          "key": "CX3.weeks_to_view"
+        },
+        {
+          "key": "CX3.week_offset"
+        },
+        "CX3.firstDayOfWeek",
+        "CX3.display_week_number",
+        "CX3.display_weather",
+        "CX3.fontsize",
+        {
+          "key": "CX3.maxeventsize"
+        }
+      ]
+    }
+  ]
+}

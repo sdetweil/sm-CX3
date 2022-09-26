@@ -1,0 +1,39 @@
+<!--  CX3 for smart-mirror  -->
+<div ng-controller="CX3" class="{{CX3.container.classes}}" style="{{CX3.container.styles}}" xid="dom">
+<div class="CX3_MAGIC" id="{{CX3.instance.id}}" xid="magic"></div>
+<div class="headerContainer weekGrid">
+   <!--  dump out the day names -->
+   <div ng-repeat="day_of_week in CX3.days_of_week track by $index" class="weekday weekday_{{$index}}">{{day_of_week}}</div>
+</div>
+<!-- loop thru weeks, can be 0,1, or all the way to 0,3 (for month) -->
+<div ng-repeat="weeknum in CX3.weeks" class="week">
+	  <!---  a cell contains the day info -->
+   <div class="cellContainer weekGrid">
+      <!--   for days 0 to 6  -->
+      <div ng-repeat="day_number in CX3.week_days" class="cell {{CX3.cell_classes(weeknum,day_number)}} " xid="cell" >
+         <!-- draw cell -->
+         <div class="cellHeader"  xid="cellHeader">
+            <!-- only display week number in first cell of week -->
+            <div ng-if="CX3.display_week_number  && day_number == 0" class="cw">{{CX3.week_number_list[weeknum]}}</div>
+            <!-- only display weather if requested -->
+            <div ng-if="CX3.display_weather_info && CX3.days[(weeknum *7)+day_number].forecast!=null" class="cellWeather" ng-init="forecast=CX3.days[(weeknum *7)+day_number].forecast">
+            		<span class="icon-small wi {{forecast.icon}}"></span>
+            		<span class="minTemp temperature">{{forecast.min}}</span>            		
+            		<span class="maxTemp temperature">{{forecast.max}}</span>
+            </div>
+            <div class="cellDate ">
+               <span class="day"> {{CX3.days[(weeknum *7)+day_number].date.format('D')}}</span>
+            </div>
+            <div class="cellBody"></div>
+            <div class="cellFooter"></div>
+         </div>
+         <div  class="eventContainer weekGrid weekGridRow" >
+            <div class="event calendar_sam singleday useSymbol" style="grid-column: {{CX3.cell(day_number)}}; --calendarColor:blue; --oppositeColor:white;" ng-repeat="event in CX3.days[(weeknum *7)+day_number].events">
+               <span class="symbol fa fa-calendar-check"></span>
+               <div class="eventTime"><span class="eventTimeParts hour seq_0">{{event.start.format("hh")}}</span><span class="eventTimeParts literal seq_1">:</span><span class="eventTimeParts minute seq_2">{{event.start.format("mm")}}</span><span class="eventTimeParts literal seq_3"> </span><span class="eventTimeParts dayPeriod seq_4">{{event.start.format("A")}}</span></div>
+               <div "class=title">{{event.SUMMARY}}</div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

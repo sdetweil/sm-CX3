@@ -1,0 +1,11 @@
+{
+  "CX3": {
+    "config": {
+      "title": "CX3 Calendar Settings",
+      "display_weather": "Display weather info my day",
+      "display_week": "Display week number",
+      "fontsize": "text fontsize",
+      "maxevents": "Maximum events to show"
+    }
+  }
+}
