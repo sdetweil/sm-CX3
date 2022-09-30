@@ -79,9 +79,25 @@
           "key": "CX3.weeks_to_view"
         },
         {
-          "key": "CX3.week_offset"
+          "key": "CX3.week_offset",
+          "titleMap":{
+          	"-1":"one week proior to current week",
+          	"0" :"just current week",
+          	"1" :"one week after current week"
+          }
         },
-        "CX3.firstDayOfWeek",
+        {
+	        "key":"CX3.firstDayOfWeek",
+	        "titleMap":{
+	        	"0":"Sunday",
+	        	"1":"Monday",
+	        	"2":"Tuesday",
+	        	"3":"Wednesday",
+	        	"4":"Thursday",
+	        	"5":"Friday",
+	        	"6":"Saturday"
+	        }
+      	},
         "CX3.display_week_number",
         "CX3.display_weather",
         "CX3.fontsize",

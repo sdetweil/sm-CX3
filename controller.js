@@ -16,11 +16,18 @@ angular.module('SmartMirror')
 
 
 		// get parms from config
-		let weeks_to_view=    +config.CX3.weeks_to_view|| 2
 		let first_week_offset= +config.CX3.week_offset || -1
+		let weeks_to_view=    +config.CX3.weeks_to_view|| 2
+			if(weeks_to_view===1){
+			 if(first_week_offset<0){
+				first_week_offset=0
+			 }
+			} 
 		let mode= config.CX3.mode || "week"
 		let fontsize =   (config.CX3.fontsize  || 14) +"px" 
 		let maxeventlines= (config.CX3.maxeventlines || 6 )
+		let firsttime=true
+		let days= [] 
 
 		let v= {
 
@@ -30,14 +37,14 @@ angular.module('SmartMirror')
 				first_day_of_week: config.CX3.firstDayOfWeek || 0,
 
 				container:{
-					classes:'bodice CX3_' + 1 + ' CX3  mode_' + 'day ',
+					classes:'bodice CX3_' + 1 + ' CX3  mode_' + mode,
 					styles:"--fontsize:"+fontsize +"; --maxeventlines:"+maxeventlines+"; position: absolute;   z-index: 1; ",
 				},
 				currentWeek:0,
 
 				instance: {id:'CX3_' + 1},
 
-				week_number:[52,53,54],
+				week_number:[],
 				weeks:[],
 				week_days:[0,1,2,3,4,5,6],
 				days_of_week:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
@@ -51,99 +58,57 @@ angular.module('SmartMirror')
 					$scope[mname].days_of_week=$scope[mname].days_of_week.concat(old)
 				}
 
-				$scope[mname].now=moment()
-
-				let_day_of_week= $scope[mname].now.isoWeekday()
-				let today=+$scope[mname].now.format('DD')
-				let week_number=(new Date()).getWeek()
-				//console.log("current week number="+week_number)
-
 				if(mode==="month"){
 					weeks_to_view=4
 					first_week_offset =-1 // (Math.floor(today/7)-1)*-1
 					//console.log(" month view first week = "+today+ " floor="+ (Math.floor(today/7)-1)*-1)
 				}
 
-				$scope[mname].weeks=[]
-				$scope[mname].week_number_list=[]
-				let save_week_number=week_number
-				for(let x=weeks_to_view+first_week_offset;x>first_week_offset ;x--){
-					$scope[mname].weeks.push(x)
+				$scope[mname].now=moment()
 
-					$scope[mname].week_number_list.push(week_number+first_week_offset); week_number++
-
-				}
-				week_number=save_week_number
-				$scope[mname].weeks=$scope[mname].weeks.reverse()
-
-				let today_weekday=$scope[mname].now.weekday()
-				//let today=now.getDay()
-				let week_position=$scope[mname].days_of_week.indexOf($scope[mname].days_of_week[today_weekday-$scope[mname].first_day_of_week])
-				$scope[mname].currentWeek = $scope[mname].week_number_list.indexOf(week_number)
-
-				//console.log("today is a "+today_weekday+" text="+$scope[mname].days_of_week[today_weekday-$scope[mname].first_day_of_week])
-				
-
-				// get number of days to fill in calendar cells
-				// number of weeks * 7
-				// today_week is todays position in current week 
-				// week_position is array index 0,1,2,3
-				// get count of days prior
-				//  today_weekday  + (week_position *7) 0 = only, 1 = second
-				//      4 (thurs)  + (week_position *7)  
-				let days= []  // number_of_days = weeks_to_view * 7
-
-				// get the 1st day of the calendar
-				let first_day = $scope[mname].now.format('D') -(today_weekday  + ($scope[mname].currentWeek*7)) 
-				// start with a copy of today
-
-				let start = $scope[mname].now.clone()
-				// create the day array
-				let number_of_days = weeks_to_view * 7
-
-				// start the dat object at the 1st cal date
-				start.set('date', first_day)
-				for (let i =0; i<number_of_days; i++ ){
-					// create an object for each day, will be used by the template
-					days[i]={date:moment(start),day:start.format('D'),events:[],forecast:null}
-					// add a day
-					start.add(1,'day')
-				}
-				// save the count of days in the cal
-				$scope[mname].days=days
-
-				let futureDays=start.diff($scope[mname].now,'days')
-				// go get the caledar events, wait til theu are ready
-				//CalendarService.getCalendarEvents().then(()=>{
-				$scope.$on('calendar',(event,futureevents)=>{
-					// events ready (pulled from web calendar)
-					// past events is large, filter out the garbage
-					let allpastevents=CalendarService.getPastEvents()
-					let pastevents=[]
-					for(let i = allpastevents.length-1;i>0;i--){
-						let Event = allpastevents[i]
-						if(Event.start.diff($scope[mname].days[0].date) >=0  
-									||
-						        (Event.end.isAfter($scope[mname].days[0].date) &&
-						        	Event.start.isBefore($scope[mname].days[0].date))){
-							pastevents.unshift(Event)
-						} else {
-							break;
-						}
+				// watch for day change ,each second tick event from main controller
+				$scope.$on("clock-tick",(event,tickmoment)=>{
+					if($scope[mname].now.format("DD") !== tickmoment.format("DD") || firsttime){
+						firsttime = false;
+						// date changed
+						// recalc days array
+						$scope[mname].now = tickmoment
+						refreshDisplay()
 					}
-					/*
-					.filter(Event=>{
-						return Event.start.diff($scope[mname].days[0].date) >=0  
-									||
-						        (Event.end.isAfter($scope[mname].days[0].date) &&
-						        	Event.start.isBefore($scope[mname].days[0].date))
-					});*/
-					// get furture events, for just the rest of the calendar (could be 28 days, or 1)
-					//let futureevents= CalendarService.getFutureEvents(futureDays+1, (futureDays+1)*maxeventlines)
-					//console.log("future events="+JSON.stringify(futureevents,null,2))
-					// loop thu the days once
-					// make one list
-					let events=pastevents.concat(futureevents)
+				})	
+
+				// used on weather update event and overnight day change
+				updateWeather=((weatherData)=>{
+					if(weatherData && weatherData.weekly){
+						//console.log("have weekly data ="+JSON.stringify(data.weekly,null,2))
+						for ( let i in weatherData.weekly.data){
+							let forecastDay = weatherData.weekly.data[i]
+							let m = moment.utc(forecastDay.dt*1000)
+							//console.log("forecast day="+m.format("YYYY:MM:DD")+" temp min="+forecastDay.temp.min+" temp max="+forecastDay.temp.max)
+							let fd = m.format('DD')
+							for(d of days){
+								if(d.date.format('DD')==fd){
+									d.forecast={icon:weatherData.weekly.data[i].wi,min:weatherData.weekly.data[i].temperatureMin, max:weatherData.weekly.data[i].temperatureMax}	
+									break;
+								}
+							}
+							$scope.$apply()
+						}
+					}					
+				})	
+				
+				// watch for weather update event, from weather plugin
+				$scope.$on('weather',(event,weather_data)=>{
+					//console.log("received weather data change trigger")
+					// if we are displaying weather info 
+					if($scope[mname].display_weather_info){
+						$scope[mname].weatherData=weather_data
+						updateWeather($scope[mname].weatherData)
+					}
+
+				})	
+				// used on calendar refresh and overnight day change
+				updateCalendar=((events)=>{
 					// loop thru and apportion by date
 					days.forEach(d=>{
 						d.events=[]
@@ -168,41 +133,127 @@ angular.module('SmartMirror')
             				});
 						}
 					})
-				}, true)
-				$scope.$on('weather',(event,data)=>{
-					console.log("received weather data change trigger")
-					//data=WeatherService.getWeatherData()
-					if(data.weekly){
-						//console.log("have weekly data ="+JSON.stringify(data.weekly,null,2))
-						for ( let i in data.weekly){
-							let forecastDay = data.weekly[i]
-							let m = moment.utc(forecastDay.dt*1000)
-							//console.log("forecast day="+m.format("YYYY:MM:DD")+" temp min="+forecastDay.temp.min+" temp max="+forecastDay.temp.max)
-							let fd = m.format('DD')
-							for(d of days){
-								if(d.date.format('DD')==fd){
-									d.forecast={icon:data.weekly.data[i].wi,min:data.weekly.data[i].temperatureMin, max:data.weekly.data[i].temperatureMax}	
-									break;
-								}
-							}
-							$scope.$apply()
+
+				})
+				// watch for calendar refresh event, from calendar plugin
+				$scope.$on('calendar',(event,futureevents)=>{
+					// events ready (pulled from web calendar)
+					// past events is large, filter out the garbage
+					let allpastevents=CalendarService.getPastEvents()
+					let pastevents=[]
+					for(let i = allpastevents.length-1;i>0;i--){
+						let Event = allpastevents[i]
+						if(Event.start.diff($scope[mname].days[0].date) >=0  
+									||
+						        (Event.end.isAfter($scope[mname].days[0].date) &&
+						        	Event.start.isBefore($scope[mname].days[0].date))){
+							pastevents.unshift(Event)
+						} else {
+							break;
 						}
 					}
-				})
-				// form the grid column info
-				$scope[mname].cell= function(start){
-						let x = ""+(parseInt(start)+1)
-							if(start !== 6)
-								x.concat("/"+(parseInt(start)+2))
-						return x
-				}
-				// generate the css classes for this days cell
-				$scope[mname].cell_classes=(week,day)=>{
-					let d=days[week*7+day]
-					let thisMonth=$scope[mname].now.format("MM")===d.date.format("MM")?" thisMonth":""
-					let thisYear=$scope[mname].now.format("YYYY")===d.date.format("YYYY")?" thisYear":""
-					let isToday=$scope[mname].now.format("YYYYMMDD")===d.date.format("YYYYMMDD")?" today":""
 
-					return "day"+day+" weekday_"+day+" year_"+d.date.format("YYYY")+" month_"+d.date.format("MM")+ " date_"+d.date.format("DD")+isToday+thisMonth+thisYear
+					// loop thu the days once
+					// make one list
+					$scope[mname].calendar_events=pastevents.concat(futureevents)
+					updateCalendar($scope[mname].calendar_events)
+
+				}, true)									
+
+				// all the work to build the data for the template
+				refreshDisplay = ()=>{
+					return new Promise((resolve,reject)=>{
+						//let_day_of_week= $scope[mname].now.isoWeekday()
+						let today=+$scope[mname].now.format('DD')
+						let week_number=(new Date()).getWeek()
+
+						$scope[mname].weeks=[0,1,2,3,4]
+						$scope[mname].week_number_list=[]
+						let save_week_number=week_number
+						for(let x=week_offset<0?-1:0 ; x<weeks_to_view;x++){
+							//$scope[mname].weeks.push(x)
+
+							$scope[mname].week_number_list.push(week_number+x); 
+
+						}
+						week_number=save_week_number
+						// -1, weeks 2 
+						//    0,1  ( current week in 1)
+						// -1, weeks 1
+							// not valid, offset changed to 0  (current week in 0)
+						// 0 weeks 1,2,3 
+						//    0	  (current week in 0)
+						//	   weeks, 0,1,2
+						// 1 weeks 1 (not valid, current 0)
+						//	weeks 0
+						//  1 weeks 2 
+						//	weeks 0,1  
+						// 1 weeks 3
+						//    weeks 0,1,2
+						// month 
+						//   weeks 0,1,2,3
+						$scope[mname].weeks=$scope[mname].weeks.slice(0,weeks_to_view)
+						//$scope[mname].weeks=$scope[mname].weeks.reverse()
+
+						let today_weekday=$scope[mname].now.weekday()
+	
+						let week_position=$scope[mname].days_of_week.indexOf($scope[mname].days_of_week[today_weekday-$scope[mname].first_day_of_week])
+						$scope[mname].currentWeek = $scope[mname].week_number_list.indexOf(week_number)
+
+						//console.log("today is a "+today_weekday+" text="+$scope[mname].days_of_week[today_weekday-$scope[mname].first_day_of_week])
+						
+
+						// get number of days to fill in calendar cells
+						// number of weeks * 7
+						// today_week is todays position in current week 
+						// week_position is array index 0,1,2,3
+						// get count of days prior
+						//  today_weekday  + (week_position *7) 0 = only, 1 = second
+						//      4 (thurs)  + (week_position *7)  
+						// number_of_days = weeks_to_view * 7
+
+						// get the 1st visible day of the calendar (before now usually)
+						let first_day = $scope[mname].now.format('D') -((today_weekday  + ($scope[mname].currentWeek*7)-$scope[mname].first_day_of_week)) 
+
+						// start with a copy of today
+						let start = $scope[mname].now.clone()
+						// start the day object at the 1st visible cal date
+						start.set('date', first_day)
+
+						// create the day array
+						let number_of_days = weeks_to_view * 7						
+						// fill the array
+						days=Array(number_of_days).fill({date:start,day:0,events:[],forecast:null})
+						for (let i =0; i<number_of_days; i++ ){
+							// create an object for each day, will be used by the template
+							days[i]={date:moment(start),day:start.format('D'),events:[],forecast:null}
+							// add a day
+							start.add(1,'day')
+						}
+						// save the list of days in the scope
+						$scope[mname].days=days
+
+						// form the grid column info
+						$scope[mname].cell= function(start){
+								let x = ""+(parseInt(start)+1)
+									if(start !== 6)
+										x.concat("/"+(parseInt(start)+2))
+								return x
+						}
+						// generate the css classes for this days cell
+						$scope[mname].cell_classes=(week,day)=>{
+							let d=days[week*7+day]
+							let thisMonth=$scope[mname].now.format("MM")===d.date.format("MM")?" thisMonth":""
+							let thisYear=$scope[mname].now.format("YYYY")===d.date.format("YYYY")?" thisYear":""
+							let isToday=$scope[mname].now.format("YYYYMMDD")===d.date.format("YYYYMMDD")?" today":""
+							let passed=$scope[mname].now.isAfter(d.date)?" passed":""
+							return "day"+day+" weekday_"+day+" year_"+d.date.format("YYYY")+" month_"+d.date.format("MM")+ " date_"+d.date.format("DD")+isToday+thisMonth+thisYear+passed
+						}
+						updateCalendar($scope[mname].calendar_events)
+						if($scope[mname].display_weather_info){
+							updateWeather($scope[mname].weatherData)
+						}
+						resolve()
+					})
 				}
 	})

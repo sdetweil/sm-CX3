@@ -2,10 +2,17 @@
   "CX3": {
     "config": {
       "title": "CX3 Calendar Settings",
-      "display_weather": "Display weather info my day",
+      "display_weather": "Display weather forecase for current day forward",
       "display_week": "Display week number",
       "fontsize": "text fontsize",
-      "maxevents": "Maximum events to show"
+      "maxevents": "Maximum events to show per day",
+      "sun":"Sunday",
+      "mon":"Monday",
+      "tue":"Tuesday",
+      "wed":"Wednesday",
+      "thu":"Thursday",
+      "fri":"Friday",
+      "sat":"Saturday"
     }
   }
 }
