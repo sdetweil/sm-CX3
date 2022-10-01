@@ -2,10 +2,16 @@
   "CX3": {
     "config": {
       "title": "CX3-Kalendereinstellungen",
+      "mode": "Modus",
+      "First Day of week": "Erster Tag der Woche",
+      "weeks in view": "Wochen im Blick",
+      "week offset": "Woche versetzt",
       "display_weather": "Zeigen Sie die Wettervorhersage für den aktuellen Tag an",
       "display_week": "Wochennummer anzeigen",
       "fontsize": "Text Schriftgröße",
       "maxevents": "Maximal anzuzeigende Ereignisse pro Tag",
+      "week_title": "Woche",
+      "month_title": "Monat",
       "sun": "Sonntag",
       "mon": "Montag",
       "tue": "Dienstag",
