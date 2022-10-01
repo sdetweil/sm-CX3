@@ -1,0 +1,18 @@
+{
+  "CX3": {
+    "config": {
+      "title": "Configurações do calendário CX3",
+      "display_weather": "Exibir previsão do tempo para o dia atual em diante",
+      "display_week": "Exibir número da semana",
+      "fontsize": "tamanho da fonte do texto",
+      "maxevents": "Máximo de eventos a serem exibidos por dia",
+      "sun": "Domingo",
+      "mon": "Segunda-feira",
+      "tue": "Terça-feira",
+      "wed": "Quarta-feira",
+      "thu": "Quinta-feira",
+      "fri": "Sexta-feira",
+      "sat": "Sábado"
+    }
+  }
+}

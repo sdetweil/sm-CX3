@@ -1,0 +1,18 @@
+{
+  "CX3": {
+    "config": {
+      "title": "Impostazioni del calendario CX3",
+      "display_weather": "Visualizza previsioni meteo per il giorno corrente in avanti",
+      "display_week": "Visualizza il numero della settimana",
+      "fontsize": "dimensione del carattere del testo",
+      "maxevents": "Numero massimo di eventi da mostrare al giorno",
+      "sun": "Domenica",
+      "mon": "Lunedi",
+      "tue": "Martedì",
+      "wed": "Mercoledì",
+      "thu": "Giovedì",
+      "fri": "Venerdì",
+      "sat": "Sabato"
+    }
+  }
+}

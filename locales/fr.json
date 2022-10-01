@@ -1,0 +1,18 @@
+{
+  "CX3": {
+    "config": {
+      "title": "Paramètres du calendrier CX3",
+      "display_weather": "Afficher les prévisions météo pour la journée en cours",
+      "display_week": "Afficher le numéro de semaine",
+      "fontsize": "taille de police du texte",
+      "maxevents": "Nombre maximal d'événements à afficher par jour",
+      "sun": "Dimanche",
+      "mon": "Lundi",
+      "tue": "Mardi",
+      "wed": "Mercredi",
+      "thu": "Jeudi",
+      "fri": "Vendredi",
+      "sat": "Samedi"
+    }
+  }
+}

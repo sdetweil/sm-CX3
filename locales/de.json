@@ -1,0 +1,18 @@
+{
+  "CX3": {
+    "config": {
+      "title": "CX3-Kalendereinstellungen",
+      "display_weather": "Zeigen Sie die Wettervorhersage für den aktuellen Tag an",
+      "display_week": "Wochennummer anzeigen",
+      "fontsize": "Text Schriftgröße",
+      "maxevents": "Maximal anzuzeigende Ereignisse pro Tag",
+      "sun": "Sonntag",
+      "mon": "Montag",
+      "tue": "Dienstag",
+      "wed": "Mittwoch",
+      "thu": "Donnerstag",
+      "fri": "Freitag",
+      "sat": "Samstag"
+    }
+  }
+}
