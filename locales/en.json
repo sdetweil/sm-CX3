@@ -2,10 +2,16 @@
   "CX3": {
     "config": {
       "title": "CX3 Calendar Settings",
+      "mode":"Mode",
+      "First Day of week":"First Day of week",
+      "weeks in view":"weeks in view",
+      "week offset":"week offset",
       "display_weather": "Display weather forecase for current day forward",
       "display_week": "Display week number",
       "fontsize": "text fontsize",
       "maxevents": "Maximum events to show per day",
+      "week_title":"week",
+      "month_title":"month",
       "sun":"Sunday",
       "mon":"Monday",
       "tue":"Tuesday",

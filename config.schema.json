@@ -5,7 +5,7 @@
       "properties": {
         "mode": {
           "type": "string",
-          "title": "mode",
+          "title": "{{mode}}",
           "enum": [
             "week",
             "month"
@@ -13,7 +13,7 @@
         },
         "firstDayOfWeek": {
           "type": "number",
-          "title": "First Day of week",
+          "title": "{{First Day of week}}",
           "enum": [
             0,
             1,
@@ -26,7 +26,7 @@
         },
         "weeks_to_view": {
           "type": "string",
-          "title": "weeks in view",
+          "title": "{{weeks in view}}",
           "default": "2",
           "enum": [
             "1",
@@ -37,7 +37,7 @@
         },
         "week_offset": {
           "type": "string",
-          "title": "week offset",
+          "title": "{{week offset}}",
           "enum": [
             "-1",
             "0",
@@ -74,30 +74,43 @@
       "expandable": true,
       "order": 99,
       "items": [
-        "CX3.mode",
         {
-          "key": "CX3.weeks_to_view"
+          "type": "selectfieldset",
+          "items": [
+            {
+              "type": "section",
+              "title": "{{week_title}}",
+              "items": [
+                {
+                  "key": "CX3.weeks_to_view"
+                },
+                {
+                  "key": "CX3.week_offset",
+                  "titleMap": {
+                    "0": "just current week",
+                    "1": "one week after current week",
+                    "-1": "one week prior to current week"
+                  }
+                }
+              ]
+            },
+            {
+              "title": "{{month_title}}"
+            }
+          ]
         },
         {
-          "key": "CX3.week_offset",
-          "titleMap":{
-          	"-1":"one week proior to current week",
-          	"0" :"just current week",
-          	"1" :"one week after current week"
+          "key": "CX3.firstDayOfWeek",
+          "titleMap": {
+            "0": "Sunday",
+            "1": "Monday",
+            "2": "Tuesday",
+            "3": "Wednesday",
+            "4": "Thursday",
+            "5": "Friday",
+            "6": "Saturday"
           }
         },
-        {
-	        "key":"CX3.firstDayOfWeek",
-	        "titleMap":{
-	        	"0":"Sunday",
-	        	"1":"Monday",
-	        	"2":"Tuesday",
-	        	"3":"Wednesday",
-	        	"4":"Thursday",
-	        	"5":"Friday",
-	        	"6":"Saturday"
-	        }
-      	},
         "CX3.display_week_number",
         "CX3.display_weather",
         "CX3.fontsize",
