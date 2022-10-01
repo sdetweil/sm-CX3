@@ -44,7 +44,7 @@ angular.module('SmartMirror')
 
 				instance: {id:'CX3_' + 1},
 
-				week_number:[],
+				todays_week_number:0,
 				weeks:[],
 				week_days:[0,1,2,3,4,5,6],
 				days_of_week:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
@@ -56,12 +56,6 @@ angular.module('SmartMirror')
 				if($scope[mname].first_day_of_week!=0){
 					let old=$scope[mname].days_of_week.splice(0,$scope[mname].first_day_of_week)
 					$scope[mname].days_of_week=$scope[mname].days_of_week.concat(old)
-				}
-
-				if(mode==="month"){
-					weeks_to_view=4
-					first_week_offset =-1 // (Math.floor(today/7)-1)*-1
-					//console.log(" month view first week = "+today+ " floor="+ (Math.floor(today/7)-1)*-1)
 				}
 
 				$scope[mname].now=moment()
@@ -136,23 +130,25 @@ angular.module('SmartMirror')
 
 				})
 				// watch for calendar refresh event, from calendar plugin
-				$scope.$on('calendar',(event,futureevents)=>{
+				$scope.$on('calendar',()=>{
 					// events ready (pulled from web calendar)
 					// past events is large, filter out the garbage
+					let futureevents= CalendarService.getFutureEvents($scope[mname].days.length,-1)
 					let allpastevents=CalendarService.getPastEvents()
 					let pastevents=[]
-					for(let i = allpastevents.length-1;i>0;i--){
-						let Event = allpastevents[i]
-						if(Event.start.diff($scope[mname].days[0].date) >=0  
-									||
-						        (Event.end.isAfter($scope[mname].days[0].date) &&
-						        	Event.start.isBefore($scope[mname].days[0].date))){
-							pastevents.unshift(Event)
-						} else {
-							break;
+					if($scope[mname].days.length){
+						for(let i = allpastevents.length-1;i>0;i--){
+							let Event = allpastevents[i]
+							if(Event.start.diff($scope[mname].days[0].date) >=0  
+										||
+							        (Event.end.isAfter($scope[mname].days[0].date) &&
+							        	Event.start.isBefore($scope[mname].days[0].date))){
+								pastevents.unshift(Event)
+							} else {
+								break;
+							}
 						}
 					}
-
 					// loop thu the days once
 					// make one list
 					$scope[mname].calendar_events=pastevents.concat(futureevents)
@@ -165,18 +161,31 @@ angular.module('SmartMirror')
 					return new Promise((resolve,reject)=>{
 						//let_day_of_week= $scope[mname].now.isoWeekday()
 						let today=+$scope[mname].now.format('DD')
-						let week_number=(new Date()).getWeek()
+						let todays_week_number=(new Date()).getWeek()
+						let day_of_week_first= (new Date(+$scope[mname].now.format('YYYY'), +$scope[mname].now.format('MM')-1, 1)).getDay()
+						if(mode==="month"){
+							// (weeks is days + offset of 1st day in week )/7
+							// 28+6 (saturday)=34/7=4+remainder (5)
+							// 28+0 (sunday=28/7=4, no remainder) (4)
+							// 30 + 0 = 30/7=4+ = 5
+							// 31 + 6 = 37/7=5+=6 
+							weeks_to_view=Math.ceil((day_of_week_first+new Date("0").getDate())/7)==0?3:4
+							first_week_offset = Math.floor((today+day_of_week_first)/7)
+							//console.log(" month view first week = "+today+ " floor="+ (Math.floor(today/7)-1)*-1)
+						}
 
-						$scope[mname].weeks=[0,1,2,3,4]
-						$scope[mname].week_number_list=[]
-						let save_week_number=week_number
-						for(let x=week_offset<0?-1:0 ; x<weeks_to_view;x++){
+						for(let i =0; i<weeks_to_view;i++){
+							$scope[mname].weeks.push(i)
+						}
+						$scope[mname].todays_week_number_list=[]
+						//let save_week_number=todays_week_number
+						for(let x=first_week_offset<0?-1:0 ; x<weeks_to_view;x++){
 							//$scope[mname].weeks.push(x)
 
-							$scope[mname].week_number_list.push(week_number+x); 
+							$scope[mname].todays_week_number_list.push(todays_week_number+x); 
 
 						}
-						week_number=save_week_number
+						//todays_week_number=save_week_number
 						// -1, weeks 2 
 						//    0,1  ( current week in 1)
 						// -1, weeks 1
@@ -192,13 +201,13 @@ angular.module('SmartMirror')
 						//    weeks 0,1,2
 						// month 
 						//   weeks 0,1,2,3
-						$scope[mname].weeks=$scope[mname].weeks.slice(0,weeks_to_view)
+						//$scope[mname].weeks=$scope[mname].weeks.slice(0,weeks_to_view)
 						//$scope[mname].weeks=$scope[mname].weeks.reverse()
 
 						let today_weekday=$scope[mname].now.weekday()
 	
 						let week_position=$scope[mname].days_of_week.indexOf($scope[mname].days_of_week[today_weekday-$scope[mname].first_day_of_week])
-						$scope[mname].currentWeek = $scope[mname].week_number_list.indexOf(week_number)
+						$scope[mname].currentWeek = $scope[mname].todays_week_number_list.indexOf(todays_week_number)
 
 						//console.log("today is a "+today_weekday+" text="+$scope[mname].days_of_week[today_weekday-$scope[mname].first_day_of_week])
 						
