@@ -69,7 +69,7 @@ angular.module('SmartMirror')
 						$scope[mname].now = tickmoment
 						refreshDisplay()
 					}
-				})	
+				})
 
 				// used on weather update event and overnight day change
 				updateWeather=((weatherData)=>{
@@ -88,9 +88,8 @@ angular.module('SmartMirror')
 							}
 							$scope.$apply()
 						}
-					}					
-				})	
-				
+					}
+				})
 				// watch for weather update event, from weather plugin
 				$scope.$on('weather',(event,weather_data)=>{
 					//console.log("received weather data change trigger")
@@ -133,10 +132,11 @@ angular.module('SmartMirror')
 				$scope.$on('calendar',()=>{
 					// events ready (pulled from web calendar)
 					// past events is large, filter out the garbage
+					let pastevents=[]
 					let futureevents= CalendarService.getFutureEvents($scope[mname].days.length,-1)
 					let allpastevents=CalendarService.getPastEvents()
-					let pastevents=[]
-					if($scope[mname].days.length){
+
+					if($scope[mname].days && $scope[mname].days.length){
 						for(let i = allpastevents.length-1;i>0;i--){
 							let Event = allpastevents[i]
 							if(Event.start.diff($scope[mname].days[0].date) >=0  
@@ -148,13 +148,14 @@ angular.module('SmartMirror')
 								break;
 							}
 						}
-					}
+
 					// loop thu the days once
 					// make one list
 					$scope[mname].calendar_events=pastevents.concat(futureevents)
 					updateCalendar($scope[mname].calendar_events)
+					}
 
-				}, true)									
+				}, true)
 
 				// all the work to build the data for the template
 				refreshDisplay = ()=>{

@@ -76,6 +76,8 @@
       "items": [
         {
           "type": "selectfieldset",
+          "title":"Select view mode",
+          "key":"CX3.mode",
           "items": [
             {
               "type": "section",
@@ -95,7 +97,7 @@
               ]
             },
             {
-              "title": "{{month_title}}"
+            	"title":""
             }
           ]
         },
