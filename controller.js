@@ -137,15 +137,17 @@ angular.module('SmartMirror')
 					let allpastevents=CalendarService.getPastEvents()
 
 					if($scope[mname].days && $scope[mname].days.length){
-						for(let i = allpastevents.length-1;i>0;i--){
+						let caf_first_day=$scope[mname].days[0].date
+ 						for(let i = allpastevents.length-1;i>0;i--){
 							let Event = allpastevents[i]
-							if(Event.start.diff($scope[mname].days[0].date) >=0  
+							if(Event.start.diff(caf_first_day) >=0  
 										||
-							        (Event.end.isAfter($scope[mname].days[0].date) &&
-							        	Event.start.isBefore($scope[mname].days[0].date))){
+							        (Event.end.isAfter(caf_first_day) &&
+							        	Event.start.isBefore(caf_first_day))){
 								pastevents.unshift(Event)
 							} else {
-								break;
+								// events not in any particular order.. can't end loop til we go thru them all
+								//break;
 							}
 						}
 
