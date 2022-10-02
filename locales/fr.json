@@ -2,10 +2,16 @@
   "CX3": {
     "config": {
       "title": "Paramètres du calendrier CX3",
+      "mode": "Mode",
+      "First Day of week": "Premier jour de la semaine",
+      "weeks in view": "semaines en vue",
+      "week offset": "décalage hebdomadaire",
       "display_weather": "Afficher les prévisions météo pour la journée en cours",
       "display_week": "Afficher le numéro de semaine",
       "fontsize": "taille de police du texte",
       "maxevents": "Nombre maximal d'événements à afficher par jour",
+      "week_title": "la semaine",
+      "month_title": "mois",
       "sun": "Dimanche",
       "mon": "Lundi",
       "tue": "Mardi",
