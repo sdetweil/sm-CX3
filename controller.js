@@ -180,12 +180,12 @@ angular.module('SmartMirror')
 						for(let i =0; i<weeks_to_view;i++){
 							$scope[mname].weeks.push(i)
 						}
-						$scope[mname].todays_week_number_list=[]
+						$scope[mname].week_number_list=[]
 						//let save_week_number=todays_week_number
 						for(let x=first_week_offset<0?-1:0 ; x<weeks_to_view;x++){
 							//$scope[mname].weeks.push(x)
 
-							$scope[mname].todays_week_number_list.push(todays_week_number+x); 
+							$scope[mname].week_number_list.push(todays_week_number+x); 
 
 						}
 						//todays_week_number=save_week_number
@@ -210,7 +210,7 @@ angular.module('SmartMirror')
 						let today_weekday=$scope[mname].now.weekday()
 	
 						let week_position=$scope[mname].days_of_week.indexOf($scope[mname].days_of_week[today_weekday-$scope[mname].first_day_of_week])
-						$scope[mname].currentWeek = $scope[mname].todays_week_number_list.indexOf(todays_week_number)
+						$scope[mname].currentWeek = $scope[mname].week_number_list.indexOf(todays_week_number)
 
 						//console.log("today is a "+today_weekday+" text="+$scope[mname].days_of_week[today_weekday-$scope[mname].first_day_of_week])
 						
