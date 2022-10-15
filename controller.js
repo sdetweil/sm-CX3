@@ -41,7 +41,8 @@ angular.module('SmartMirror')
 					styles:"--fontsize:"+fontsize +"; --maxeventlines:"+maxeventlines+"; position: absolute;   z-index: 1; ",
 				},
 				currentWeek:0,
-
+				useSymbol: !!config.CX3.useSymbol? parseInt(config.CX3.useSymbol):false,
+				symbolName:config.CX3.symbol_name ||"calendar-check",
 				instance: {id:'CX3_' + 1},
 
 				todays_week_number:0,
@@ -102,31 +103,32 @@ angular.module('SmartMirror')
 				})	
 				// used on calendar refresh and overnight day change
 				updateCalendar=((events)=>{
+					if(events){
 					// loop thru and apportion by date
-					days.forEach(d=>{
-						d.events=[]
-						// loop thru the smaller number of events
-						events.forEach(event=>{
-							//console.log("comparing "+d.date.format("YYYY:MM:DD HH:MM A")+" with "+ event.start.format("YYYY:MM:DD HH:MM A"+" title "+event.SUMMARY))
-							// if this event starts this day, or ends this day
-							// date.diff isn't working)
-							if(event.start.format("YYYY:MM:DD") === d.date.format("YYYY:MM:DD") || event.end.format("YYYY:MM:DD") ===d.date.format("YYYY:MM:DD")) {
-								//console.log("Matching event day="+d.date.format("YYYY:MM:DD HH:mm A")+ " event start="+event.start.format("YYYY:MM:DD HH:mm A")+" event end="+event.end.format("YYYY:MM:DD HH:mm A"))
-								// add it to the days events
-								d.events.push(event)
+						days.forEach(d=>{
+							d.events=[]
+							// loop thru the smaller number of events
+							events.forEach(event=>{
+								//console.log("comparing "+d.date.format("YYYY:MM:DD HH:MM A")+" with "+ event.start.format("YYYY:MM:DD HH:MM A"+" title "+event.SUMMARY))
+								// if this event starts this day, or ends this day
+								// date.diff isn't working)
+								if(event.start.format("YYYY:MM:DD") === d.date.format("YYYY:MM:DD") || event.end.format("YYYY:MM:DD") ===d.date.format("YYYY:MM:DD")) {
+									//console.log("Matching event day="+d.date.format("YYYY:MM:DD HH:mm A")+ " event start="+event.start.format("YYYY:MM:DD HH:mm A")+" event end="+event.end.format("YYYY:MM:DD HH:mm A"))
+									// add it to the days events
+									d.events.push(event)
+								}
+							})
+							// sort when there is more than one event per day
+							if(d.events.length>1){
+								d.events=d.events.sort(function(a,b){
+									var da = new Date(a.start).getTime();
+	            					var db = new Date(b.start).getTime();
+
+	            					return da < db ? -1 : da > db ? 1 : 0
+	            				});
 							}
 						})
-						// sort when there is more than one event per day
-						if(d.events.length>1){
-							d.events=d.events.sort(function(a,b){
-								var da = new Date(a.start).getTime();
-            					var db = new Date(b.start).getTime();
-
-            					return da < db ? -1 : da > db ? 1 : 0
-            				});
-						}
-					})
-
+					}
 				})
 				// watch for calendar refresh event, from calendar plugin
 				$scope.$on('calendar',()=>{
@@ -260,6 +262,9 @@ angular.module('SmartMirror')
 							let isToday=$scope[mname].now.format("YYYYMMDD")===d.date.format("YYYYMMDD")?" today":""
 							let passed=$scope[mname].now.isAfter(d.date)?" passed":""
 							return "day"+day+" weekday_"+day+" year_"+d.date.format("YYYY")+" month_"+d.date.format("MM")+ " date_"+d.date.format("DD")+isToday+thisMonth+thisYear+passed
+						}
+						$scope[mname].calname=(literal)=>{
+							return literal.replace('@','_').replace(/\./g,'_')
 						}
 						updateCalendar($scope[mname].calendar_events)
 						if($scope[mname].display_weather_info){

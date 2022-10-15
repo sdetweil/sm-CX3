@@ -28,8 +28,8 @@
             <div class="cellFooter"></div>
          </div>
          <div  class="eventContainer weekGrid weekGridRow" >
-            <div class="event calendar_sam singleday useSymbol" style="grid-column: {{CX3.cell(day_number)}}; --calendarColor:blue; --oppositeColor:white;" ng-repeat="event in CX3.days[(weeknum *7)+day_number].events">
-               <span class="symbol fa fa-calendar-check"></span>
+            <div class="event {{CX3.calname(event.calendarName)}} singleday" style="grid-column: {{CX3.cell(day_number)}};" ng-repeat="event in CX3.days[(weeknum *7)+day_number].events">
+               <span ng-if="CX3.useSymbol" class="symbol fa fa-{{CX3.symbolName}}"></span>
                <div class="eventTime"><span class="eventTimeParts hour seq_0">{{event.start.format("hh")}}</span><span class="eventTimeParts literal seq_1">:</span><span class="eventTimeParts minute seq_2">{{event.start.format("mm")}}</span><span class="eventTimeParts literal seq_3"> </span><span class="eventTimeParts dayPeriod seq_4">{{event.start.format("A")}}</span></div>
                <div "class=title">{{event.SUMMARY}}</div>
             </div>

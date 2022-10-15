@@ -18,7 +18,12 @@
       "wed": "miércoles",
       "thu": "jueves",
       "fri": "Viernes",
-      "sat": "sábado"
+      "sat": "sábado",
+      "useSymbol": "mostrar Símbolo para eventos de calendario",
+      "useSymbolTrue": "use el nombre del símbolo",
+      "symbol_name": "Nombre del símbolo",
+      "symbol_desc": "este es el nombre corto del símbolo de la biblioteca de símbolos FontAwesome",
+      "nosymbol": "no use el símbolo para los eventos del calendario"
     }
   }
 }

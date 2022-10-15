@@ -1,3 +1,6 @@
+@import url("../../node_modules/@fortawesome/fontawesome-free/css/all.min.css");
+@import url("../../node_modules/@fortawesome/fontawesome-free/css/v4-shims.min.css");
+
 .CX3 {
   /* you CAN modify these values; but SHOULD NOT to remove */
   --celllinecolor: #333;
@@ -191,7 +194,7 @@
   color: var(--oppositeColor);
 }
 
-.CX3 .event.singleday:not(.useSymbol)::before,
+/*.CX3 .event.singleday:not(.useSymbol)::before,
 .CX3 .event.singleday.useSymbol .symbol.noSymbol::before {
   content: '⬤';
   color: var(--calendarColor);
@@ -209,7 +212,7 @@
   padding-right: 2px;
   font-size: 75%;
   align-self: center;
-}
+} */
 
 .CX3 .event.singleday.useSymbol .symbol {
   color: var(--calendarColor);

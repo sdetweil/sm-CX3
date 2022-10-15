@@ -63,7 +63,23 @@
           "type": "number",
           "title": "{{maxevents}}",
           "default": 6
+        },
+        "useSymbol":
+        {
+          "type":"stringg",
+          "title":"{{useSymbol}}",
+          "enum":[
+            "0",
+            "1"
+          ]
+        },
+        "symbolName":
+        {
+          "type":"string",
+          "title":"{{symbol_name}}",
+          "default":"calendar-check"
         }
+
       }
     }
   },
@@ -97,7 +113,7 @@
               ]
             },
             {
-            	"title":""
+              "title":""
             }
           ]
         },
@@ -118,6 +134,30 @@
         "CX3.fontsize",
         {
           "key": "CX3.maxeventsize"
+        },
+
+        {  
+          "type": "selectfieldset",
+          "key":"CX3.useSymbol",
+          "titleMap":{
+            "0":"do not display Symbol for calendar events",
+            "1":"display Symbol for calendar events"
+          },
+          "items": [    
+            {
+                "title":"{{nosymbol}}"
+            } ,                         
+            {
+              "type":"section",
+              "title":"{{useSymbolTrue}}",
+              "items":[
+                {                
+                  "key":"CX3.symbolName",
+                  "description":"{{symbol_desc}}"
+                }                
+              ]
+            }                
+          ]
         }
       ]
     }

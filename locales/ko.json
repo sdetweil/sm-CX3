@@ -18,7 +18,12 @@
       "wed": "수요일",
       "thu": "목요일",
       "fri": "금요일",
-      "sat": "토요일"
+      "sat": "토요일",
+      "useSymbol": "달력 이벤트에 대한 표시 기호",
+      "useSymbolTrue": "기호 이름 사용",
+      "symbol_name": "기호 이름",
+      "symbol_desc": "이것은 FontAwesome 심볼 라이브러리에 있는 심볼의 짧은 이름입니다.",
+      "nosymbol": "캘린더 이벤트에 기호를 사용하지 마십시오"
     }
   }
 }

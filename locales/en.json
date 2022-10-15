@@ -18,7 +18,12 @@
       "wed":"Wednesday",
       "thu":"Thursday",
       "fri":"Friday",
-      "sat":"Saturday"
+      "sat":"Saturday",
+      "useSymbol":"display Symbol for calendar events",
+      "useSymbolTrue":"use Symbol name",
+      "symbol_name":"Symbol Name",
+      "symbol_desc":"this is the short name of the symbol from the FontAwesome symbol library",
+      "nosymbol":"do not use symbol for calendar events"
     }
   }
 }
